@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanity URL Generator</title>
+</head>
+<body>
+    <section>
+        <div class="form-container">
+            <div class="form" id="div-form">
+                <p id="error"></p>
+                <input type="text" name="Server invite URL" placeholder="Server invite URL" id="invite" required autofocus>
+                <span><img src="" alt="" id="ppserv"><span id="serv"></span></span>
+                <input type="text" name="Vanity URL" placeholder="Vanity URL" id="vanity" required>
+                <span id="vanity-taken"></span>
+                <button id="getCode">Get Code!</button>
+            </div>
+            <div class="form cache" id="code">
+                <p id="code-p"></p>
+                <button id="copycode">Copy to clipboard</button>
+            </div>
+        </div>
+    </section>
+    <p id="signature">Made with ❤ by <a href="https://ajbot.xyz" target="_blank">Kamboo#5722</a></p>
+    <style>
+        @font-face {
+            font-family: 'Ableton Sans';
+            src: url(https://padlet-uploads.storage.googleapis.com/601831207/787f4e94b5e86c3adf24f983b73bf6b8/AbletonSans_Light.ttf);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #36393f;
+        }
+
+        p#signature {
+            font-family: 'Ableton Sans';
+            position: absolute;
+            bottom: 1vw;
+            left: 1vw;
+            /* text-align: right; */
+            color: white;
+        }
+        p#signature a {
+            color: white;
+        }
+
+        section {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        section div.form-container {
+            position: relative;
+            height: 50vh;
+            width: 40vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #5275bb;
+            font-family: 'Ableton Sans';
+        }
+
+        section div.form-container div {
+            position: relative;
+            height: 70%;
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        section div.form-container div>* {
+            display: block;
+            margin: 5% 0 10% 0;
+            box-sizing: border-box;
+        }
+        section div.form-container div input {
+            background: #41609e;
+            outline: none;
+            border: 0px solid #6892e7;
+            border-radius: 3px;
+            padding: 5px;
+            color: white;
+            transition: all .1s ease-in-out;
+            font-family: 'Ableton Sans';
+
+        }
+        section div.form-container div span#vanity-taken {
+            display: inline;
+            margin: 0;
+        }
+        section div.form-container div#code {
+            position: relative;
+            height: 70%;
+            width: 70%;
+        }
+
+        section div.form-container p#error {
+            position: absolute;
+            color: #ff1b1b;
+            top: 0;
+            transform: translateY(-200%);
+            text-align: center;
+        }
+        section div.form-container div#code p#code-p {
+            position: absolute;
+            top: 0;
+            padding: 10px;
+            width: 100%;
+            height: 80%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background-color: #41609e;
+            /* color: white; */
+        }
+        section div.form-container div input:focus {
+            border: 3px solid #6892e7;
+        }
+        section div.form-container div input::placeholder {
+            color: #ffffff80;
+        }
+        section div.form-container div button {
+            cursor: pointer;
+            box-sizing: border-box;
+            position: absolute;
+            right: 0;
+            bottom: -25%;
+            padding: 5px;
+            background: #4ac54a;
+            border: 0px solid #6de66d;
+            border-radius: 3px;
+            transition: all .1s ease-in-out;
+            font-family: 'Ableton Sans';
+        }
+        section div.form-container div.cache {
+            display: none;
+        }
+
+        section div.form-container div button:focus {
+            border: 3px solid #ade7ad;
+        }
+        section div.form-container div button:hover {
+            background-color: #78e278;
+        }
+        section div.form-container div>span {
+            display: inline;
+        }
+        section div.form-container div>span>img {
+            display: inline;
+            width: 2rem;
+            vertical-align: middle;
+            border-radius: 50%;
+        }
+        section div.form-container div#success {
+            text-align: center;
+        }
+        @media (max-width: 932px) {
+            section div.form-container {
+                width: 60vw;
+            }
+        }
+
+        @media (max-width: 434px) {
+            section div.form-container {
+                width: 80vw;
+            }
+        }
+
+        @media (max-height: 600px) {
+            section div.form-container {
+                height: 70vh;
+            }
+        }
+
+        @media (max-height: 400px) {
+            section div.form-container {
+                height: 80vh;
+            }
+        }
+    </style>
+    <script>
+        let tagInvite = document.getElementById('invite');
+        let tagVanity = document.getElementById('vanity');
+        let btnCode = document.getElementById('getCode');
+        let form = document.querySelector('div.form-container');
+
+        let divForm = document.getElementById('div-form')
+        let divCode = document.getElementById('code')
+
+        let spanServ = document.getElementById('serv');
+        let ppServ = document.getElementById('ppserv');
+        let vanityTaken = document.getElementById('vanity-taken');
+
+        tagInvite.addEventListener("change", () => {
+            if (tagInvite.value !== "") {
+                let request = new XMLHttpRequest();
+                request.open("GET", `https://discord.com/api/v8/invites/${tagInvite.value}`)
+                request.send()
+                request.onload = () => {
+                    let objetJS = JSON.parse(request.response);
+                    if (request.status === 200) {
+                        let serverName = objetJS.guild.name;
+                        let serverPP = objetJS.guild.icon;
+                        ppServ.src = `https://cdn.discordapp.com/icons/${objetJS.guild.id}/${serverPP}.png?size=4096`;
+                        spanServ.innerHTML = " " + serverName;
+                            
+                    }
+                    else if (request.status === 404) {
+                        spanServ.innerHTML = "Uh-oh, looks like this invite doesn't exist!";
+                    }
+                    else {
+                        spanServ.innerHTML = "*something went wrong*";
+                    }
+                }
+            }
+            else {
+                spanServ.innerHTML = '';
+                ppServ.src = "";
+            }
+        })
+
+        tagVanity.addEventListener("change", () => {
+            if (tagVanity.value !== "") {
+                let request = new XMLHttpRequest();
+                request.open("GET", `https://discord.com/api/v8/invites/${tagVanity.value}`)
+                request.send()
+                request.onload = () => {
+                    let objetJS = JSON.parse(request.response);
+                    if (request.status === 200) {
+                        vanityTaken.innerHTML = "This vanity URL is already taken."
+                    } else if (request.status === 404) {
+                        vanityTaken.innerHTML = "You can take this vanity URL."
+                    }
+                }
+            }
+            else {
+                vanityTaken.innerHTML = '';
+            }
+        })
+
+        
+        let btnCopy = document.getElementById('copycode');
+        let copyText = document.getElementById("code-p");
+        let errorP = document.getElementById("error");
+
+        btnCode.addEventListener("click", () => {
+
+            if (tagInvite.value !== "" && tagVanity.value !== "") {
+                let server = tagInvite.value;
+                let vanity = tagVanity.value;
+
+                let result = "discοrd.gg/" + vanity + "||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||||​||" + "discord.gg/" + server;
+                console.log(result);
+                divForm.classList.add('cache')
+                divCode.classList.remove('cache')
+                copyText.innerHTML = result;
+            } else {
+                errorP.innerHTML = "Some essential informations are missing";
+            }
+        })
+
+
+        btnCopy.addEventListener('click', () => {
+            navigator.clipboard.writeText(copyText.innerHTML);
+            form.innerHTML = '<div id="success"><h3>Successfully copied to clipboard!</h3><span>You can now paste this into a Discord message.</span></div>';
+        })
+    </script>
+</body>
+</html>
