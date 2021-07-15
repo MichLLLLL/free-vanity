@@ -1,5 +1,5 @@
 # Free Vanity URLs (Discord servers)
-[Click here "awesomeeeeeeeeeeee"](https://michlllll.github.io/free-vanity)
+[Click here](https://michlllll.github.io/free-vanity 'awesomeeeeeeeeeeee')
 
 ### How it works
 
@@ -18,3 +18,6 @@ Now you get the code
 Now you can click on the button `Get Code!` then `Copy to clipboard`.
 
 It's done! Paste the text into a Discord message and see!
+
+-----------------------------------
+Made with ❤️ by [Kamboo#5722](https://ajbot.xyz).
